@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/ikaliuzh/card-validator/api";
+
+service CardValidator {
+  rpc ValidateCard(Card) returns (CardValidationResponse) {}
+}
+
+message Card {
+  string card_number = 1;
+  string expiration_month = 2;
+  string expiration_year = 3;
+}
+
+message CardValidationResponse {
+  bool is_valid = 1;
+  optional Error error = 2;
+}
+
+message Error {
+  int32 code = 1;
+  string message = 2;
+}
