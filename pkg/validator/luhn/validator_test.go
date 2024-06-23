@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ikaliuzh/card-validator/pkg/card"
+	"github.com/ikaliuzh/card-validator/pkg/errorcodes"
 )
 
 func TestLuhnValidator(t *testing.T) {
@@ -39,12 +40,12 @@ func TestLuhnValidator(t *testing.T) {
 		{
 			description: "invalid card number",
 			card:        card.Card{Number: card.MustGetNumberFromString("342342553112030")},
-			expectedErr: "invalid card number: card number failed Luhn algorithm validation",
+			expectedErr: "card number validation failed: card number failed Luhn algorithm validation",
 		},
 		{
 			description: "invalid card number - 2",
 			card:        card.Card{Number: card.MustGetNumberFromString("4976030843039062")},
-			expectedErr: "invalid card number: card number failed Luhn algorithm validation",
+			expectedErr: "card number validation failed: card number failed Luhn algorithm validation",
 		},
 	}
 	for _, tc := range testCases {
@@ -55,7 +56,7 @@ func TestLuhnValidator(t *testing.T) {
 			if tc.expectedErr != "" {
 				require.Error(t, err)
 				require.EqualError(t, err, tc.expectedErr)
-				require.ErrorIs(t, err, ErrInvalidCardNumber)
+				require.ErrorIs(t, err, errorcodes.ErrInvalidCardNumber)
 			} else {
 				require.NoError(t, err)
 			}

@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ikaliuzh/card-validator/pkg/card"
+	"github.com/ikaliuzh/card-validator/pkg/errorcodes"
 	"github.com/ikaliuzh/card-validator/pkg/validator/expirydate/mocks"
 )
 
@@ -90,7 +91,7 @@ func TestValidator(t *testing.T) {
 			if tc.expectedErr != "" {
 				require.Error(t, err)
 				require.EqualError(t, err, tc.expectedErr)
-				require.ErrorIs(t, err, ErrExpired)
+				require.ErrorIs(t, err, errorcodes.ErrExpired)
 
 			} else {
 				require.NoError(t, err)
