@@ -1,13 +1,14 @@
 package card
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 	"unicode"
 
-	protoApi "github.com/ikaliuzh/card-validator/api/proto"
+	"github.com/ikaliuzh/card-validator/gen/proto"
+
+	"github.com/ikaliuzh/card-validator/pkg/errorcodes"
 )
 
 // Card represents a card.
@@ -22,41 +23,36 @@ type Card struct {
 
 type CardNumber []int
 
-var (
-	ErrInvalidCardNumberFormat     = errors.New("invalid card number format")
-	ErrInvalidExpirationDateFormat = errors.New("invalid expiration date format")
-)
-
 // NewCardFromProto creates a new Card from the protobuf Card message.
-func NewCardFromProto(card *protoApi.Card) (Card, error) {
+func NewCardFromProto(card *proto.Card) (Card, error) {
 	cardNumber, err := NumberFromString(strings.TrimSpace(card.CardNumber))
 	if err != nil {
-		return Card{}, fmt.Errorf("%w: card number is invalid: %q", ErrInvalidCardNumberFormat, err)
+		return Card{}, fmt.Errorf("%w: card number is invalid: %q", errorcodes.ErrInvalidCardNumberFormat, err)
 	}
 	if len(cardNumber) < 8 {
 		return Card{}, fmt.Errorf("%w: card number length should be at least 8 digits: got %d",
-			ErrInvalidCardNumberFormat, len(cardNumber))
+			errorcodes.ErrInvalidCardNumberFormat, len(cardNumber))
 	}
 	if len(cardNumber) > 19 {
 		return Card{}, fmt.Errorf("%w: card number length should be at most 19 digits: got %d",
-			ErrInvalidCardNumberFormat, len(cardNumber))
+			errorcodes.ErrInvalidCardNumberFormat, len(cardNumber))
 	}
 
 	month, err := strconv.Atoi(strings.TrimSpace(card.ExpirationMonth))
 	if err != nil {
 		return Card{}, fmt.Errorf("%w: expiration month is invalid: %w",
-			ErrInvalidExpirationDateFormat, err)
+			errorcodes.ErrExpirationDateInvalidFormat, err)
 	}
 	if month < 1 || month > 12 {
 		return Card{}, fmt.Errorf("%w: expiration month is invalid: got %d",
-			ErrInvalidExpirationDateFormat, month)
+			errorcodes.ErrExpirationDateInvalidFormat, month)
 
 	}
 
 	year, err := strconv.Atoi(strings.TrimSpace(card.ExpirationYear))
 	if err != nil {
 		return Card{}, fmt.Errorf("%w: expiration year is invalid: %w",
-			ErrInvalidExpirationDateFormat, err)
+			errorcodes.ErrExpirationDateInvalidFormat, err)
 	}
 
 	return Card{
@@ -67,8 +63,8 @@ func NewCardFromProto(card *protoApi.Card) (Card, error) {
 }
 
 // ToProto converts the Card to the protobuf Card message.
-func (c *Card) ToProto() *protoApi.Card {
-	return &protoApi.Card{
+func (c *Card) ToProto() *proto.Card {
+	return &proto.Card{
 		CardNumber:      c.Number.ToString(),
 		ExpirationMonth: strconv.Itoa(c.ExpirationMonth),
 		ExpirationYear:  strconv.Itoa(c.ExpirationYear),

@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-//go:generate mockgen -destination=mocks/mock_dateprovider.go -package=mocks github.com/ikaliuzh/card-validator/internal/validator/dataFormat DateProvider
+//go:generate mockgen -destination=mocks/mock_dateprovider.go -package=mocks github.com/ikaliuzh/card-validator/pkg/validator/expirydate DateProvider
 type DateProvider interface {
 	CurrentYear() int
 	CurrentMonth() int

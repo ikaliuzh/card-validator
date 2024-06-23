@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"github.com/ikaliuzh/card-validator/pkg/card"
+	"github.com/ikaliuzh/card-validator/pkg/errorcodes"
 )
 
-var ()
-
+// Validator validates card number using Luhn algorithm. The card number must contain the check digit.
 type Validator struct{}
 
 func New() *Validator {
@@ -19,7 +19,7 @@ func (v *Validator) Validate(_ context.Context, card card.Card) error {
 	checkDigit := luhnAlgorithm(card.Number[:len(card.Number)-1])
 
 	if checkDigit != card.Number[len(card.Number)-1] {
-		return fmt.Errorf("%w: card number failed Luhn algorithm validation", ErrInvalidCardNumber)
+		return fmt.Errorf("%w: card number failed Luhn algorithm validation", errorcodes.ErrInvalidCardNumber)
 	}
 	return nil
 }

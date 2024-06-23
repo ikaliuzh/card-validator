@@ -10,7 +10,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	api "github.com/ikaliuzh/card-validator/api/proto"
+	api "github.com/ikaliuzh/card-validator/gen/proto"
 	"github.com/ikaliuzh/card-validator/internal/server"
 )
 

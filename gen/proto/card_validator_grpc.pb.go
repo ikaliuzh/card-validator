@@ -4,7 +4,7 @@
 // - protoc             v5.27.1
 // source: proto/card_validator.proto
 
-package api
+package proto
 
 import (
 	context "context"

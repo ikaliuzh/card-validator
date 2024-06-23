@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-option go_package = "github.com/ikaliuzh/card-validator/api";
+option go_package = "github.com/ikaliuzh/card-validator/gen/proto";
 
 service CardValidator {
   rpc ValidateCard(Card) returns (CardValidationResponse) {}

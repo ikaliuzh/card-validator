@@ -9,7 +9,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	protoApi "github.com/ikaliuzh/card-validator/api/proto"
+	"github.com/ikaliuzh/card-validator/gen/proto"
+
 	"github.com/ikaliuzh/card-validator/pkg/card"
 	"github.com/ikaliuzh/card-validator/pkg/errorcodes"
 	"github.com/ikaliuzh/card-validator/pkg/validator"
@@ -19,7 +20,7 @@ import (
 )
 
 type Server struct {
-	protoApi.UnimplementedCardValidatorServer
+	proto.UnimplementedCardValidatorServer
 
 	log         *slog.Logger
 	validator   validator.Validator
@@ -56,7 +57,7 @@ func WithLog(log *slog.Logger) func(*Server) {
 	}
 }
 
-func (s *Server) ValidateCard(ctx context.Context, req *protoApi.Card) (*protoApi.CardValidationResponse, error) {
+func (s *Server) ValidateCard(ctx context.Context, req *proto.Card) (*proto.CardValidationResponse, error) {
 	log := s.log.With(
 		slog.Group("card",
 			slog.String("number", req.CardNumber),
@@ -82,7 +83,7 @@ func (s *Server) ValidateCard(ctx context.Context, req *protoApi.Card) (*protoAp
 	case validationError := <-validationResult:
 		if validationError == nil {
 			log.Info("card is valid")
-			return &protoApi.CardValidationResponse{IsValid: true}, nil
+			return &proto.CardValidationResponse{IsValid: true}, nil
 		}
 
 		code, ok := errorcodes.Extract(validationError)
@@ -92,10 +93,10 @@ func (s *Server) ValidateCard(ctx context.Context, req *protoApi.Card) (*protoAp
 		}
 
 		log.Error("card is invalid",
-			slog.String("code", code), slog.Any("reason", validationError))
-		return &protoApi.CardValidationResponse{
+			slog.String("code", string(code)), slog.Any("reason", validationError))
+		return &proto.CardValidationResponse{
 			IsValid: false,
-			Error:   &protoApi.Error{Code: code, Message: validationError.Error()},
+			Error:   &proto.Error{Code: string(code), Message: validationError.Error()},
 		}, nil
 
 	case <-time.After(s.respTimeout):

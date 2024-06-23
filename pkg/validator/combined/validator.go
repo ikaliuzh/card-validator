@@ -7,6 +7,7 @@ import (
 	"github.com/ikaliuzh/card-validator/pkg/validator"
 )
 
+// Validator is a combined validator that runs multiple validators in sequence. It stops validation at the first error.
 type Validator struct {
 	validators []validator.Validator
 }

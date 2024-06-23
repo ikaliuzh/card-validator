@@ -5,12 +5,11 @@
 package mock_validator
 
 import (
-	"context"
-	"reflect"
+	context "context"
+	reflect "reflect"
 
-	"github.com/golang/mock/gomock"
-
-	"github.com/ikaliuzh/card-validator/pkg/card"
+	gomock "github.com/golang/mock/gomock"
+	card "github.com/ikaliuzh/card-validator/pkg/card"
 )
 
 // MockValidator is a mock of Validator interface.
@@ -37,7 +36,7 @@ func (m *MockValidator) EXPECT() *MockValidatorMockRecorder {
 }
 
 // Validate mocks base method.
-func (m *MockValidator) Validate(arg0 context.Context, arg1 *card.Card) error {
+func (m *MockValidator) Validate(arg0 context.Context, arg1 card.Card) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Validate", arg0, arg1)
 	ret0, _ := ret[0].(error)
