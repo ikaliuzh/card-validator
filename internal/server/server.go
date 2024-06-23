@@ -93,10 +93,10 @@ func (s *Server) ValidateCard(ctx context.Context, req *proto.Card) (*proto.Card
 		}
 
 		log.Error("card is invalid",
-			slog.String("code", string(code)), slog.Any("reason", validationError))
+			slog.String("code", code), slog.Any("reason", validationError))
 		return &proto.CardValidationResponse{
 			IsValid: false,
-			Error:   &proto.Error{Code: string(code), Message: validationError.Error()},
+			Error:   &proto.Error{Code: code, Message: validationError.Error()},
 		}, nil
 
 	case <-time.After(s.respTimeout):
