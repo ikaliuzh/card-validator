@@ -25,6 +25,7 @@ func main() {
 	var port int
 	flag.StringVar(&env, "env", envProd, "deployment environment")
 	flag.IntVar(&port, "port", 8080, "port to listen on")
+	flag.Parse()
 
 	logger := setupLogger(env)
 
@@ -40,7 +41,7 @@ func main() {
 	)
 
 	api.RegisterCardValidatorServer(grpcServer, cardValidatorServer)
-
+	logger.Info("starting server", slog.Int("port", port), slog.String("env", env))
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
@@ -63,7 +64,7 @@ func setupLogger(env string) *slog.Logger {
 			slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}),
 		)
 	default:
-		panic(fmt.Errorf("unknown env %q", env))
+		log.Fatalf("unknown env %q", env)
 	}
 
 	return logger

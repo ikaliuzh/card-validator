@@ -17,9 +17,11 @@ func New() *Validator {
 
 func (v *Validator) Validate(_ context.Context, card card.Card) error {
 	checkDigit := luhnAlgorithm(card.Number[:len(card.Number)-1])
+	cardCheckdigit := card.Number[len(card.Number)-1]
 
-	if checkDigit != card.Number[len(card.Number)-1] {
-		return fmt.Errorf("%w: card number failed Luhn algorithm validation", errorcodes.ErrInvalidCardNumber)
+	if checkDigit != cardCheckdigit {
+		return fmt.Errorf("%w: expected check digit %d, got %d",
+			errorcodes.ErrCardNumberLuhnFailed, checkDigit, cardCheckdigit)
 	}
 	return nil
 }

@@ -40,12 +40,12 @@ func TestLuhnValidator(t *testing.T) {
 		{
 			description: "invalid card number",
 			card:        card.Card{Number: card.MustGetNumberFromString("342342553112030")},
-			expectedErr: "card number validation failed: card number failed Luhn algorithm validation",
+			expectedErr: "card number failed Luhn algorithm validation: expected check digit 1, got 0",
 		},
 		{
 			description: "invalid card number - 2",
 			card:        card.Card{Number: card.MustGetNumberFromString("4976030843039062")},
-			expectedErr: "card number validation failed: card number failed Luhn algorithm validation",
+			expectedErr: "card number failed Luhn algorithm validation: expected check digit 5, got 2",
 		},
 	}
 	for _, tc := range testCases {
@@ -56,7 +56,7 @@ func TestLuhnValidator(t *testing.T) {
 			if tc.expectedErr != "" {
 				require.Error(t, err)
 				require.EqualError(t, err, tc.expectedErr)
-				require.ErrorIs(t, err, errorcodes.ErrInvalidCardNumber)
+				require.ErrorIs(t, err, errorcodes.ErrCardNumberLuhnFailed)
 			} else {
 				require.NoError(t, err)
 			}

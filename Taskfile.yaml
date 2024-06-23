@@ -1,5 +1,9 @@
 version: '3'
 
+env:
+  PORT: 8080
+  ENV: local
+
 tasks:
 
   generate:
@@ -35,3 +39,25 @@ tasks:
       - t
     cmds:
       - go test ./... -coverprofile cover.out
+
+  build:
+    desc: "Build the application"
+    aliases:
+      - b
+    cmds:
+      - go build -o ./bin/card_validator_server ./cmd/server
+
+  run:
+    desc: "Run the application"
+    aliases:
+      - r
+      - start
+    deps:
+      - task: build
+    cmds:
+      - ./bin/card_validator_server --env=$ENV --port=$PORT
+
+  evans:
+    desc: "Run the gRPC client"
+    cmds:
+      - evans proto/card_validator.proto --port $PORT

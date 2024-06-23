@@ -92,7 +92,7 @@ func (s *Server) ValidateCard(ctx context.Context, req *proto.Card) (*proto.Card
 			return nil, status.Errorf(codes.Internal, "unexpected error: %v", validationError)
 		}
 
-		log.Error("card is invalid",
+		log.Warn("card is invalid",
 			slog.String("code", code), slog.Any("reason", validationError))
 		return &proto.CardValidationResponse{
 			IsValid: false,
