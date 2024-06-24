@@ -18,17 +18,15 @@ func (e ValidationError) Error() string {
 }
 
 const (
-	// ExpirationDateOther is returned for all expiration date validation errors that don't have more specific
-	// error codes.
-	ExpirationDateOther = "100"
 	// ExpirationDateInvalidFormat is returned for all errors related to invalid date format of the expiration
 	// month or expiration year.
 	ExpirationDateInvalidFormat = "101"
 	// Expired is returned when the card is expired.
 	Expired = "102"
+	// ExpirationDateOther is returned for all expiration date validation errors that don't have more specific
+	// error codes.
+	ExpirationDateOther = "199"
 
-	// CardNumberOther is returned for all card number validation errors that don't have more specific error codes.
-	CardNumberOther = "200"
 	// CardNumberInvalidFormat is returned when the card number has an invalid format, i.e. it contains non-digit
 	// symbols.
 	CardNumberInvalidFormat = "201"
@@ -36,6 +34,8 @@ const (
 	CardNumberLuhnFailed = "202"
 	// CardNumberInvalidIIN is returned when the card number has an invalid Issuer Identification Number.
 	CardNumberInvalidIIN = "203"
+	// CardNumberOther is returned for all card number validation errors that don't have more specific error codes.
+	CardNumberOther = "299"
 
 	// Other is returned for all validation errors that don't have more specific error codes.
 	Other = "999"
