@@ -2,4 +2,10 @@
 **/out/**
 **/.out/**
 
+*.idea
+*.iml
+*.iws
+*.ipr
+**/.vscode/**
+
 bin
