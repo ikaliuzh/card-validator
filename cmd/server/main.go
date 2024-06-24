@@ -22,14 +22,16 @@ const (
 
 func main() {
 	var env string
+	var host string
 	var port int
 	flag.StringVar(&env, "env", envProd, "deployment environment")
+	flag.StringVar(&host, "host", "0.0.0.0", "host to listen on")
 	flag.IntVar(&port, "port", 8080, "port to listen on")
 	flag.Parse()
 
 	logger := setupLogger(env)
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
+	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

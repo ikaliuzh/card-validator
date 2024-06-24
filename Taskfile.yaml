@@ -3,6 +3,7 @@ version: '3'
 env:
   PORT: 8080
   ENV: local
+  TAG: 0.1.0
 
 tasks:
 
@@ -40,12 +41,32 @@ tasks:
     cmds:
       - go test ./... -coverprofile cover.out
 
+  fmt:
+    desc: Run fmt
+    cmds:
+      - go fmt ./...
+
+  tidy:
+    desc: Run mod tidy
+    cmds:
+      - go mod tidy
+
   build:
     desc: "Build the application"
     aliases:
       - b
     cmds:
       - go build -o ./bin/card_validator_server ./cmd/server
+
+  docker-build:
+    desc: "Build the Docker image"
+    cmds:
+      - docker build -t card-validator:$TAG .
+
+  docker-run:
+    desc: "Build the Docker image"
+    cmds:
+      - docker run -p $PORT:$PORT card-validator:$TAG --env=dev --port=$PORT --host=0.0.0.0
 
   run:
     desc: "Run the application"
@@ -55,7 +76,7 @@ tasks:
     deps:
       - task: build
     cmds:
-      - ./bin/card_validator_server --env=$ENV --port=$PORT
+      - ./bin/card_validator_server --env=$ENV --port=$PORT --host=localhost
 
   evans:
     desc: "Run the gRPC client"
