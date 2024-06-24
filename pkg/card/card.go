@@ -27,7 +27,7 @@ type CardNumber []int
 func NewCardFromProto(card *proto.Card) (Card, error) {
 	cardNumber, err := NumberFromString(strings.TrimSpace(card.CardNumber))
 	if err != nil {
-		return Card{}, fmt.Errorf("%w: card number is invalid: %w", errorcodes.ErrInvalidCardNumberFormat, err)
+		return Card{}, fmt.Errorf("%w: %w", errorcodes.ErrInvalidCardNumberFormat, err)
 	}
 	if len(cardNumber) < 8 {
 		return Card{}, fmt.Errorf("%w: card number length should be at least 8 digits: got %d",

@@ -19,7 +19,7 @@ import (
 	"github.com/ikaliuzh/card-validator/pkg/validator/luhn"
 )
 
-type Server struct {
+type CardValidatorServer struct {
 	proto.UnimplementedCardValidatorServer
 
 	log         *slog.Logger
@@ -27,8 +27,8 @@ type Server struct {
 	respTimeout time.Duration
 }
 
-func New(options ...func(*Server)) *Server {
-	svr := &Server{
+func New(options ...func(*CardValidatorServer)) *CardValidatorServer {
+	svr := &CardValidatorServer{
 		respTimeout: 1 * time.Second,
 		validator:   combined.New(expirydate.New(), luhn.New()),
 		log:         slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo})),
@@ -39,25 +39,25 @@ func New(options ...func(*Server)) *Server {
 	return svr
 }
 
-func WithTimeout(timeout time.Duration) func(*Server) {
-	return func(s *Server) {
+func WithTimeout(timeout time.Duration) func(*CardValidatorServer) {
+	return func(s *CardValidatorServer) {
 		s.respTimeout = timeout
 	}
 }
 
-func WithValidator(v validator.Validator) func(*Server) {
-	return func(s *Server) {
+func WithValidator(v validator.Validator) func(*CardValidatorServer) {
+	return func(s *CardValidatorServer) {
 		s.validator = v
 	}
 }
 
-func WithLog(log *slog.Logger) func(*Server) {
-	return func(s *Server) {
+func WithLog(log *slog.Logger) func(*CardValidatorServer) {
+	return func(s *CardValidatorServer) {
 		s.log = log
 	}
 }
 
-func (s *Server) ValidateCard(ctx context.Context, req *proto.Card) (*proto.CardValidationResponse, error) {
+func (s *CardValidatorServer) ValidateCard(ctx context.Context, req *proto.Card) (*proto.CardValidationResponse, error) {
 	log := s.log.With(
 		slog.Group("card",
 			slog.String("number", req.CardNumber),
